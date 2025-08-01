@@ -14,9 +14,7 @@ const Train = () => {
   // Add new states for API processing
   const [isProcessing, setIsProcessing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
-  const [analysisType, setAnalysisType] = useState('summary');
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     // Initialize Speech Recognition
@@ -188,7 +186,7 @@ const Train = () => {
         },
         body: JSON.stringify({
           transcript: finalTranscript,
-          analysisType: analysisType,
+          analysisType: 'summary',
         }),
       });
 
@@ -257,7 +255,7 @@ const Train = () => {
         )}
 
         {/* Transcript Display */}
-        {transcript && (
+        {transcript && isRecording && (
           <div className="w-full max-w-2xl">
             <h3 className="text-white text-lg font-semibold mb-2">Transcript:</h3>
             <div className="bg-gray-800 p-4 rounded-lg text-white text-sm max-h-40 overflow-y-auto">
@@ -270,17 +268,6 @@ const Train = () => {
         {/* Analysis Controls */}
         {finalTranscript && !isRecording && (
           <div className="w-full max-w-2xl space-y-4">
-            <div className="flex flex-col space-y-2">
-              <label className="text-white text-sm font-medium">Analysis Type:</label>
-              <select
-                value={analysisType}
-                onChange={(e) => setAnalysisType(e.target.value)}
-                className="bg-gray-800 text-white p-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
-              >
-                <option value="summary">Summary</option>
-              </select>
-            </div>
-
             <button
               onClick={processTranscript}
               disabled={isProcessing}
