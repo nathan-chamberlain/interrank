@@ -4,7 +4,9 @@ import { useState } from 'react';
 export default function TranscriptProcessor() {
   const [transcript, setTranscript] = useState('');
   const [analysisResult, setAnalysisResult] = useState('');
+  const [scoreResult, setScoreResult] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isScoring, setIsScoring] = useState(false);
   const [analysisType, setAnalysisType] = useState('summary');
   const [error, setError] = useState('');
 
@@ -103,6 +105,52 @@ export default function TranscriptProcessor() {
     }
   };
 
+  const handleCalculateScore = async () => {
+    if (!transcript.trim()) {
+      setError('Please enter a transcript to score.');
+      return;
+    }
+
+    try {
+      setIsScoring(true);
+      setError('');
+      
+      console.log('Sending request to scoring API...');
+      
+      const response = await fetch('/api/score-transcript', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          transcript
+        }),
+      });
+
+      console.log('Scoring response status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Scoring error response:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+
+      const data = await response.json();
+      console.log('Scoring success response:', data);
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to calculate score');
+      }
+      
+      setScoreResult(data);
+    } catch (err) {
+      console.error('Full scoring error object:', err);
+      setError(`Error calculating score: ${err.message}`);
+    } finally {
+      setIsScoring(false);
+    }
+  };
+
   const analysisOptions = [
     { value: 'summary', label: 'Summary' },
     { value: 'sentiment', label: 'Sentiment Analysis' },
@@ -155,7 +203,7 @@ export default function TranscriptProcessor() {
         <div className="flex space-x-4 mb-4">
           <button
             onClick={handleProcessTranscript}
-            disabled={isProcessing || !transcript.trim()}
+            disabled={isProcessing || isScoring || !transcript.trim()}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {isProcessing ? 'Processing...' : 'Analyze Transcript'}
@@ -163,10 +211,18 @@ export default function TranscriptProcessor() {
           
           <button
             onClick={handleGenerateQuestions}
-            disabled={isProcessing || !transcript.trim()}
+            disabled={isProcessing || isScoring || !transcript.trim()}
             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {isProcessing ? 'Processing...' : 'Generate Questions'}
+          </button>
+
+          <button
+            onClick={handleCalculateScore}
+            disabled={isProcessing || isScoring || !transcript.trim()}
+            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            {isScoring ? 'Calculating...' : 'Calculate Score'}
           </button>
         </div>
 
@@ -179,10 +235,106 @@ export default function TranscriptProcessor() {
 
         {/* Results Display */}
         {analysisResult && (
-          <div className="bg-gray-50 p-4 rounded-md">
+          <div className="bg-gray-50 p-4 rounded-md mb-4">
             <h3 className="text-lg font-semibold mb-2">Analysis Result:</h3>
             <div className="whitespace-pre-wrap text-gray-800">
               {analysisResult}
+            </div>
+          </div>
+        )}
+
+        {/* Score Results Display */}
+        {scoreResult && (
+          <div className="bg-purple-50 p-4 rounded-md mb-4">
+            <h3 className="text-lg font-semibold mb-4 text-purple-800">Performance Score</h3>
+            
+            {/* Total Score */}
+            <div className="text-center mb-6">
+              <div className="text-4xl font-bold text-purple-600">
+                {scoreResult.totalScore || 0}/5000
+              </div>
+              <div className="text-gray-600">Overall Performance Score</div>
+              {scoreResult.speakerAnalyzed && (
+                <div className="text-sm text-gray-500 mt-1">
+                  Speaker Analyzed: {scoreResult.speakerAnalyzed}
+                </div>
+              )}
+            </div>
+
+            {/* Score Breakdown */}
+            {scoreResult.breakdown && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+                <div className="text-center p-3 bg-white rounded-lg">
+                  <div className="text-2xl font-bold text-blue-600">
+                    {scoreResult.breakdown.communicationSkills || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Communication</div>
+                  <div className="text-xs text-gray-500">/ 1000</div>
+                </div>
+                <div className="text-center p-3 bg-white rounded-lg">
+                  <div className="text-2xl font-bold text-green-600">
+                    {scoreResult.breakdown.contentQuality || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Content Quality</div>
+                  <div className="text-xs text-gray-500">/ 1000</div>
+                </div>
+                <div className="text-center p-3 bg-white rounded-lg">
+                  <div className="text-2xl font-bold text-yellow-600">
+                    {scoreResult.breakdown.engagement || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Engagement</div>
+                  <div className="text-xs text-gray-500">/ 1000</div>
+                </div>
+                <div className="text-center p-3 bg-white rounded-lg">
+                  <div className="text-2xl font-bold text-indigo-600">
+                    {scoreResult.breakdown.professionalism || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Professionalism</div>
+                  <div className="text-xs text-gray-500">/ 1000</div>
+                </div>
+                <div className="text-center p-3 bg-white rounded-lg">
+                  <div className="text-2xl font-bold text-red-600">
+                    {scoreResult.breakdown.leadership || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Leadership</div>
+                  <div className="text-xs text-gray-500">/ 1000</div>
+                </div>
+              </div>
+            )}
+
+            {/* Detailed Feedback */}
+            {scoreResult.feedback && (
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2 text-purple-700">Detailed Feedback:</h4>
+                <div className="whitespace-pre-wrap text-gray-800 bg-white p-3 rounded">
+                  {scoreResult.feedback}
+                </div>
+              </div>
+            )}
+
+            {/* Strengths and Improvements */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {scoreResult.strengths && scoreResult.strengths.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2 text-green-700">Strengths:</h4>
+                  <ul className="list-disc list-inside bg-white p-3 rounded">
+                    {scoreResult.strengths.map((strength, index) => (
+                      <li key={index} className="text-gray-800 mb-1">{strength}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              {scoreResult.improvements && scoreResult.improvements.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2 text-orange-700">Areas for Improvement:</h4>
+                  <ul className="list-disc list-inside bg-white p-3 rounded">
+                    {scoreResult.improvements.map((improvement, index) => (
+                      <li key={index} className="text-gray-800 mb-1">{improvement}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         )}
