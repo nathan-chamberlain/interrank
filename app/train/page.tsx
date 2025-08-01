@@ -15,7 +15,10 @@ const Train = () => {
   // Add new states for API processing
   const [isProcessing, setIsProcessing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
+  // Add states for timer
+  const [timeRemaining, setTimeRemaining] = useState(60);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Initialize Speech Recognition
@@ -49,10 +52,20 @@ const Train = () => {
       recognitionRef.current.onerror = (event) => {
         setSpeechError(`Speech recognition error: ${event.error}`);
         setIsRecording(false);
+        // Clear timer on error
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
       };
 
       recognitionRef.current.onend = () => {
         setIsRecording(false);
+        // Clear timer when recording ends
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
       };
     } else {
       setSpeechError('Speech recognition not supported in this browser');
@@ -87,6 +100,11 @@ const Train = () => {
     const stopRecording = () => {
       if (recognitionRef.current && isRecording) {
         recognitionRef.current.stop();
+      }
+      // Clear timer
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
       }
     };
 
@@ -147,7 +165,7 @@ const Train = () => {
       history.pushState = originalPushState;
       history.replaceState = originalReplaceState;
     };
-  }, [error, isRecording]);
+  }, [error]);
   
   const toggleRecording = () => {
     if (!recognitionRef.current) {
@@ -159,13 +177,39 @@ const Train = () => {
       recognitionRef.current.stop();
       setIsRecording(false);
       setInterimTranscript(''); // Clear interim transcript when stopping
+      // Clear timer
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
     } else {
       setSpeechError(null);
       setFinalTranscript('');
       setInterimTranscript('');
       setAnalysisResult(null); // Clear previous results
+      setTimeRemaining(60); // Reset timer to 60 seconds
+      
       recognitionRef.current.start();
       setIsRecording(true);
+      
+      // Start 60-second timer
+      timerRef.current = setInterval(() => {
+        setTimeRemaining((prevTime) => {
+          if (prevTime <= 1) {
+            // Time's up - stop recording
+            if (recognitionRef.current) {
+              recognitionRef.current.stop();
+            }
+            setIsRecording(false);
+            if (timerRef.current) {
+              clearInterval(timerRef.current);
+              timerRef.current = null;
+            }
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
     }
   };
 
@@ -219,14 +263,25 @@ const Train = () => {
             }`}
             disabled={!!speechError}
           >
-            {isRecording ? '⏹️ Stop Recording' : '🎤 Start Recording'}
+            {isRecording ? '⏹️ Stop Recording' : '🎤 Start Recording (60s)'}
           </button>
         </div>
 
         {isRecording && (
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-            <span className="text-white text-sm">Recording...</span>
+          <div className="flex flex-col items-center space-y-2">
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              <span className="text-white text-sm">Recording...</span>
+            </div>
+            <div className="text-white text-lg font-mono">
+              {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+            </div>
+            <div className="w-64 bg-gray-700 rounded-full h-2">
+              <div 
+                className="bg-red-500 h-2 rounded-full transition-all duration-1000"
+                style={{ width: `${((60 - timeRemaining) / 60) * 100}%` }}
+              ></div>
+            </div>
           </div>
         )}
 

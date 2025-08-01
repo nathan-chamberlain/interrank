@@ -121,7 +121,7 @@ const Score = () => {
           <h1 className="text-3xl font-bold text-white">Speech Analysis Score</h1>
           <button
             onClick={goBack}
-            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors cursor-pointer"
           >
             ← Back to Training
           </button>
@@ -255,13 +255,13 @@ const Score = () => {
           <div className="flex space-x-4 justify-center">
             <button
               onClick={goBack}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
             >
               🎤 Try Again
             </button>
             <button
               onClick={() => router.push('/')}
-              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-colors"
+              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
             >
               🏠 Home
             </button>
