@@ -11,6 +11,10 @@ const Train = () => {
   const [finalTranscript, setFinalTranscript] = useState('');
   const [interimTranscript, setInterimTranscript] = useState('');
   const [speechError, setSpeechError] = useState<string | null>(null);
+  // Add new states for API processing
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<string | null>(null);
+  const [analysisType, setAnalysisType] = useState('summary');
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const router = useRouter();
 
@@ -145,12 +149,7 @@ const Train = () => {
       history.replaceState = originalReplaceState;
     };
   }, [error, isRecording]);
-
-  const clearTranscript = () => {
-    setFinalTranscript('');
-    setInterimTranscript('');
-  };
-
+  
   const toggleRecording = () => {
     if (!recognitionRef.current) {
       setSpeechError('Speech recognition not available');
@@ -160,12 +159,51 @@ const Train = () => {
     if (isRecording) {
       recognitionRef.current.stop();
       setIsRecording(false);
+      setInterimTranscript(''); // Clear interim transcript when stopping
     } else {
       setSpeechError(null);
       setFinalTranscript('');
       setInterimTranscript('');
+      setAnalysisResult(null); // Clear previous results
       recognitionRef.current.start();
       setIsRecording(true);
+    }
+  };
+
+  // Add function to send transcript to API
+  const processTranscript = async () => {
+    if (!finalTranscript.trim()) {
+      setSpeechError('No transcript to process');
+      return;
+    }
+
+    setIsProcessing(true);
+    setSpeechError(null);
+
+    try {
+      const response = await fetch('/api/process-transcript', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          transcript: finalTranscript,
+          analysisType: analysisType,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to process transcript');
+      }
+
+      setAnalysisResult(data.result);
+    } catch (error) {
+      console.error('Error processing transcript:', error);
+      setSpeechError(error instanceof Error ? error.message : 'Failed to process transcript');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -196,7 +234,7 @@ const Train = () => {
       )}
 
       {/* Speech Recognition Controls */}
-      <div className="flex flex-col items-center space-y-4 w-full max-w-2xl">
+      <div className="flex flex-col items-center space-y-4 w-full max-w-4xl">
         <div className="flex space-x-4">
           <button
             onClick={toggleRecording}
@@ -209,15 +247,6 @@ const Train = () => {
           >
             {isRecording ? '⏹️ Stop Recording' : '🎤 Start Recording'}
           </button>
-          
-          {transcript && (
-            <button
-              onClick={clearTranscript}
-              className="px-6 py-3 rounded-lg font-semibold bg-gray-600 hover:bg-gray-700 text-white transition-colors"
-            >
-              Clear
-            </button>
-          )}
         </div>
 
         {isRecording && (
@@ -227,18 +256,57 @@ const Train = () => {
           </div>
         )}
 
-        {speechError && (
-          <p className="text-red-500 text-center max-w-md">{speechError}</p>
-        )}
-
         {/* Transcript Display */}
         {transcript && (
-          <div className="w-full bg-gray-800 rounded-lg p-4 max-h-60 overflow-y-auto">
+          <div className="w-full max-w-2xl">
             <h3 className="text-white text-lg font-semibold mb-2">Transcript:</h3>
-            <p className="text-gray-300 whitespace-pre-wrap break-words">
-              {transcript}
-            </p>
+            <div className="bg-gray-800 p-4 rounded-lg text-white text-sm max-h-40 overflow-y-auto">
+              {finalTranscript && <span className="text-green-300">{finalTranscript}</span>}
+              {interimTranscript && <span className="text-gray-400 italic">{interimTranscript}</span>}
+            </div>
           </div>
+        )}
+
+        {/* Analysis Controls */}
+        {finalTranscript && !isRecording && (
+          <div className="w-full max-w-2xl space-y-4">
+            <div className="flex flex-col space-y-2">
+              <label className="text-white text-sm font-medium">Analysis Type:</label>
+              <select
+                value={analysisType}
+                onChange={(e) => setAnalysisType(e.target.value)}
+                className="bg-gray-800 text-white p-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+              >
+                <option value="summary">Summary</option>
+              </select>
+            </div>
+
+            <button
+              onClick={processTranscript}
+              disabled={isProcessing}
+              className={`w-full px-6 py-3 rounded-lg font-semibold transition-colors ${
+                isProcessing
+                  ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+                  : 'bg-green-600 hover:bg-green-700 text-white'
+              }`}
+            >
+              {isProcessing ? '🔄 Processing...' : '🤖 Analyze Transcript'}
+            </button>
+          </div>
+        )}
+
+        {/* Analysis Result */}
+        {analysisResult && (
+          <div className="w-full max-w-2xl">
+            <h3 className="text-white text-lg font-semibold mb-2">Analysis Result:</h3>
+            <div className="bg-gray-900 p-4 rounded-lg text-green-300 text-sm max-h-60 overflow-y-auto whitespace-pre-wrap">
+              {analysisResult}
+            </div>
+          </div>
+        )}
+
+        {speechError && (
+          <p className="text-red-500 text-center max-w-md">{speechError}</p>
         )}
       </div>
     </div>
