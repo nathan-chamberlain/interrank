@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 const Train = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
@@ -168,41 +169,16 @@ const Train = () => {
     }
   };
 
-  // Add function to send transcript to API
-  const processTranscript = async () => {
+  // Replace the processTranscript function with navigateToScore
+  const navigateToScore = () => {
     if (!finalTranscript.trim()) {
-      setSpeechError('No transcript to process');
+      setSpeechError('No transcript to analyze');
       return;
     }
 
-    setIsProcessing(true);
-    setSpeechError(null);
-
-    try {
-      const response = await fetch('/api/process-transcript', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          transcript: finalTranscript,
-          analysisType: 'summary',
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to process transcript');
-      }
-
-      setAnalysisResult(data.result);
-    } catch (error) {
-      console.error('Error processing transcript:', error);
-      setSpeechError(error instanceof Error ? error.message : 'Failed to process transcript');
-    } finally {
-      setIsProcessing(false);
-    }
+    // Navigate to score page with transcript as query parameter
+    const encodedTranscript = encodeURIComponent(finalTranscript);
+    router.push(`/train/score?transcript=${encodedTranscript}`);
   };
 
   // Update the transcript display
@@ -269,26 +245,11 @@ const Train = () => {
         {finalTranscript && !isRecording && (
           <div className="w-full max-w-2xl space-y-4">
             <button
-              onClick={processTranscript}
-              disabled={isProcessing}
-              className={`w-full px-6 py-3 rounded-lg font-semibold transition-colors ${
-                isProcessing
-                  ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
-                  : 'bg-green-600 hover:bg-green-700 text-white'
-              }`}
+              onClick={navigateToScore}
+              className="w-full px-6 py-3 rounded-lg font-semibold transition-colors bg-green-600 hover:bg-green-700 text-white"
             >
-              {isProcessing ? '🔄 Processing...' : '🤖 Analyze Transcript'}
+              📊 View Score & Analysis
             </button>
-          </div>
-        )}
-
-        {/* Analysis Result */}
-        {analysisResult && (
-          <div className="w-full max-w-2xl">
-            <h3 className="text-white text-lg font-semibold mb-2">Analysis Result:</h3>
-            <div className="bg-gray-900 p-4 rounded-lg text-green-300 text-sm max-h-60 overflow-y-auto whitespace-pre-wrap">
-              {analysisResult}
-            </div>
           </div>
         )}
 
