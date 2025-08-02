@@ -18,3 +18,47 @@ export async function GET() {
 
   return new Response(JSON.stringify(data), { status: 200 });
 }
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { username, score } = body;
+
+    // Validate required fields
+    if (!username || score === undefined) {
+      return new Response(
+        JSON.stringify({ error: 'Username and score are required' }),
+        { status: 400 }
+      );
+    }
+
+    // Insert new entry into leaderboard table
+    const { data, error } = await supabase
+      .from('leaderboard')
+      .insert([
+        {
+          username,
+          score,
+          created_at: new Date().toISOString()
+        }
+      ])
+      .select();
+
+    if (error) {
+      return new Response(
+        JSON.stringify({ error: error.message }),
+        { status: 500 }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({ message: 'Entry added successfully', data }),
+      { status: 201 }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: 'Invalid JSON in request body' }),
+      { status: 400 }
+    );
+  }
+}

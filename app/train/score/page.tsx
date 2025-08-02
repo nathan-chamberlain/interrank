@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useAccount } from '@/lib/AccountProvider';
 
 // Update interface to match the score-answer API response
 interface ScoreData {
@@ -32,6 +33,7 @@ const Score = () => {
   const [scoreData, setScoreData] = useState<ScoreData | null>(null);
   const [isScoring, setIsScoring] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { username } = useAccount();
 
   useEffect(() => {
     const transcriptParam = searchParams.get('transcript');
@@ -68,7 +70,8 @@ const Score = () => {
           question: questionText,
           answer: transcriptText,
           questionId: questionIdParam ? parseInt(questionIdParam) : undefined,
-          expectedPoints: [] // Could be enhanced to fetch expected points for the question
+          expectedPoints: [], // Could be enhanced to fetch expected points for the question
+          username: username || 'Guest', // Use username from AccountProvider
         }),
       });
 
