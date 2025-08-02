@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useAccount } from '@/lib/AccountProvider';
 
 // Update interface to match the score-answer API response
 interface ScoreData {
@@ -33,7 +32,7 @@ const Score = () => {
   const [scoreData, setScoreData] = useState<ScoreData | null>(null);
   const [isScoring, setIsScoring] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { username } = useAccount();
+  const username = 'Guest'; // Replace with actual username from AccountProvider or context
 
   useEffect(() => {
     const transcriptParam = searchParams.get('transcript');
