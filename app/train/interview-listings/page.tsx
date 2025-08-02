@@ -2,34 +2,41 @@ import React from 'react';
 import { User } from 'lucide-react';
 
 const InterviewListingsUI = () => {
+
   const companies = [
     {
       id: 'general',
       name: 'General Questions',
       description: 'Common interview questions that apply across industries and roles.',
       logo: '?',
-      isGeneral: true
+      isGeneral: true,
+      buttonText: 'Start Interview',
+      link: '/train'
     },
     {
       id: 'sendd',
       name: 'Sendd',
       description: 'A leading logistics and delivery platform revolutionizing last-mile solutions.',
       logo: '/Sendd-logo.png',
-      isGeneral: false
+      isGeneral: false,
+      buttonText: 'Learn More',
+      link: '#'
     },
     {
       id: 'rintr',
       name: 'Rintr',
       description: 'An innovative rental marketplace connecting people with quality rental solutions.',
       logo: '/logo-blue.png',
-      isGeneral: false
+      isGeneral: false,
+      buttonText: 'Learn More',
+      link: '#'
     }
   ];
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#131614' }}>
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-6 py-20">
         {/* Title */}
         <h1 className="text-3xl font-bold text-white mb-8">
           Interview Listings
@@ -71,9 +78,20 @@ const InterviewListingsUI = () => {
                   <p className="text-sm text-gray-200 mb-4 leading-relaxed">
                     {company.description}
                   </p>
-                  <button className="bg-black text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition-colors duration-200">
-                    Learn More
-                  </button>
+                  {company.link && company.link !== '#' ? (
+                    <a 
+                      href={company.link}
+                      className="bg-slate-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-700 transition-colors duration-200 no-underline"
+                    >
+                      {company.buttonText}
+                    </a>
+                  ) : (
+                    <button 
+                      className="bg-slate-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-700 transition-colors duration-200"
+                    >
+                      {company.buttonText}
+                    </button>
+                  )}
                 </div>
               </div>
 
