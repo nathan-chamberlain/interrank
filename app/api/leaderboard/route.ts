@@ -5,12 +5,21 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export async function GET() {
-    // Fetch username, score, and timestamp from leaderboard table
-  const { data, error } = await supabase
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const username = searchParams.get('username');
+
+  let query = supabase
     .from('leaderboard')
     .select('*')
     .order('score', { ascending: false });
+
+  // If username parameter is provided, filter by username
+  if (username) {
+    query = query.eq('username', username);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
@@ -32,18 +41,16 @@ export async function POST(request: Request) {
       );
     }
 
-    // Insert new entry into leaderboard table (or update if username exists)
+    // Insert new entry into leaderboard table
     const { data, error } = await supabase
       .from('leaderboard')
-      .upsert([
+      .insert([
         {
           username,
           score,
           created_at: new Date().toISOString()
         }
-      ], {
-        onConflict: 'username'
-      })
+      ])
       .select();
 
     if (error) {

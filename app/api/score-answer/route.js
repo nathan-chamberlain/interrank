@@ -208,6 +208,8 @@ export async function POST(request) {
         console.error('Error adding to leaderboard:', leaderboardError);
         // Don't fail the main request if leaderboard fails
       }
+    } else {
+      console.log('No username provided, skipping leaderboard submission');
     }
 
     console.log('Question-Answer scoring completed successfully');
