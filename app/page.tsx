@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CgProfile } from "react-icons/cg";
 
 export default function Home() {
   return (
@@ -25,7 +26,7 @@ export default function Home() {
           </div>
           <Link href="/profile">
             <button className="bg-[#2D6F40] hover:bg-[#245732] p-2 rounded-full flex items-center justify-center ml-8">
-              <img src="/profile-icon.png" alt="Profile" className="h-8 w-8" />
+              <CgProfile className="h-8 w-8 text-white" />
             </button>
           </Link>
         </nav>
