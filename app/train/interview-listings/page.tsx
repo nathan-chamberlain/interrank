@@ -64,11 +64,11 @@ const InterviewListingsUI = () => {
                 </button>
 
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-6 text-center">
-                  <h3 className="text-xl font-bold text-gray-800 mb-3">
+                <div className="absolute inset-0 bg-slate-800 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-6 text-center">
+                  <h3 className="text-xl font-bold text-white mb-3">
                     {company.name}
                   </h3>
-                  <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                  <p className="text-sm text-gray-200 mb-4 leading-relaxed">
                     {company.description}
                   </p>
                   <button className="bg-black text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition-colors duration-200">
