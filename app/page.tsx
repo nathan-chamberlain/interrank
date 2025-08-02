@@ -7,12 +7,28 @@ export default function Home() {
       style={{ backgroundColor: '#181A1B', color: '#F4FFF7' }}
     >
       {/* Logo at the top center */}
-      <header className="w-full flex justify-center py-4">
-        <img
-          src="/logo.png"
-          alt="INTERRANK Logo"
-          className="h-12 w-auto"
-        />
+      <header className="w-full flex items-center justify-between py-4 px-8">
+        <div className="flex items-center">
+          <Link href="/">
+            <img
+              src="/logo.png"
+              alt="INTERRANK Logo"
+              className="h-16 w-auto cursor-pointer"
+              style={{ minWidth: '64px' }}
+            />
+          </Link>
+        </div>
+        <nav className="flex items-center gap-6">
+          <div className="flex items-center gap-8">
+            <Link href="/train" className="text-white font-semibold px-2 py-1 hover:underline transition-colors">Train</Link>
+            <Link href="/leaderboard" className="text-white font-semibold px-2 py-1 hover:underline transition-colors">Leaderboard</Link>
+          </div>
+          <Link href="/profile">
+            <button className="bg-[#2D6F40] hover:bg-[#245732] p-2 rounded-full flex items-center justify-center ml-8">
+              <img src="/profile-icon.png" alt="Profile" className="h-8 w-8" />
+            </button>
+          </Link>
+        </nav>
       </header>
       {/* Main content split into two */}
       <main className="flex flex-1 justify-center items-center gap-12 px-4">
@@ -28,7 +44,8 @@ export default function Home() {
             Practice your skills and improve your ranking by training with real interview questions.
           </p>
           <Link href="/train">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold cursor-pointer">
+            
+            <button className="bg-[#2D6F40] hover:bg-[#245732] text-white px-6 py-2 rounded font-semibold">
               Start Training
             </button>
           </Link>
@@ -45,7 +62,7 @@ export default function Home() {
             View your progress, analyze your stats, and see how you rank against others.
           </p>
           <Link href="/leaderboard">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold cursor-pointer">
+            <button className="bg-[#2D6F40] hover:bg-[#245732] text-white px-6 py-2 rounded font-semibold">
               View Leaderboard
             </button>
           </Link>
