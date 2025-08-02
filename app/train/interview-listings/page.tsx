@@ -59,7 +59,7 @@ const InterviewListingsUI = () => {
             >
               ?
             </button>
-            <div className="text-base text-gray-300 mt-2 font-medium">
+            <div className="w-full flex justify-center">
               General Questions
             </div>
           </div>
@@ -76,8 +76,10 @@ const InterviewListingsUI = () => {
                 className="w-full h-full object-cover"
               />
             </button>
-            <div className="text-base text-gray-300 mt-2 font-medium">
-              Sendd
+            <div className="w-full flex justify-center">
+              <span className="text-base text-gray-300 mt-2 font-medium">
+                Sendd
+              </span>
             </div>
           </div>
 
@@ -93,7 +95,7 @@ const InterviewListingsUI = () => {
                 className="w-full h-full object-cover"
               />
             </button>
-            <div className="text-base text-gray-300 mt-2 font-medium">
+            <div className="w-full flex justify-center">
               Rintr
             </div>
           </div>
