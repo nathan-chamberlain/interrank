@@ -285,12 +285,6 @@ const Score = () => {
               📚 New Question
             </button>
             <button
-              onClick={() => router.push('/')}
-              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
-            >
-              🏠 Home
-            </button>
-            <button
               onClick={() => router.push('/leaderboard')}
               className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
             >
