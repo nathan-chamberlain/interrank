@@ -28,7 +28,7 @@ export default function Home() {
             Practice your skills and improve your ranking by training with real interview questions.
           </p>
           <Link href="/train">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold">
+            <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold cursor-pointer">
               Start Training
             </button>
           </Link>
@@ -45,7 +45,7 @@ export default function Home() {
             View your progress, analyze your stats, and see how you rank against others.
           </p>
           <Link href="/leaderboard">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold">
+            <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold cursor-pointer">
               View Leaderboard
             </button>
           </Link>

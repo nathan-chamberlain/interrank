@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.4.0",
     "@auth0/nextjs-auth0": "^4.9.0",
     "@google/generative-ai": "^0.24.1",
     "@supabase/supabase-js": "^2.53.0",
