@@ -8,7 +8,7 @@ const InterviewListingsUI = () => {
       id: 'general',
       name: 'General Questions',
       description: 'Common interview questions that apply across industries and roles.',
-      logo: '?',
+      logo: '/job-interview.png',
       isGeneral: true,
       buttonText: 'Start Interview',
       link: '/train'
@@ -43,7 +43,12 @@ const InterviewListingsUI = () => {
         </h1>
 
         {/* Divider */}
-        <div className="w-full h-0.5 bg-gray-700 mb-8" />
+        <div className="w-full h-0.5 bg-gray-700 mb-3" />
+
+        {/* Subtitle */}
+        <p className="text-base text-gray-400 mb-8">
+          Please select your preferred company or interview style
+        </p>
 
         {/* Company Grid */}
         <div className="grid grid-cols-3 gap-4 max-w-4xl">
@@ -54,13 +59,17 @@ const InterviewListingsUI = () => {
                 <button
                   className={`w-full h-full transition-all duration-300 flex items-center justify-center font-medium ${
                     company.isGeneral 
-                      ? 'bg-green-700 text-white text-5xl group-hover:opacity-0' 
+                      ? 'bg-white text-white text-5xl group-hover:opacity-0' 
                       : 'bg-white group-hover:opacity-0'
                   }`}
                   aria-label={`${company.name} interview questions`}
                 >
                   {company.isGeneral ? (
-                    company.logo
+                    <img 
+                      src={company.logo} 
+                      alt={`${company.name} Icon`} 
+                      className="w-1/2 h-1/2 object-contain"
+                    />
                   ) : (
                     <img 
                       src={company.logo} 
