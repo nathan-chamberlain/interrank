@@ -154,11 +154,12 @@ export async function POST(request) {
   try {
     console.log('Question-Answer Scoring API route called');
     
-    const { question, answer, expectedPoints, questionId } = await request.json();
+    const { question, answer, expectedPoints, questionId, username } = await request.json();
     console.log('Scoring request data:', { 
       question: question?.substring(0, 100) + '...', 
       answer: answer?.substring(0, 100) + '...',
       questionId,
+      username,
       hasExpectedPoints: !!expectedPoints 
     });
 
@@ -182,12 +183,39 @@ export async function POST(request) {
       expectedPoints || []
     );
 
+    // If username is provided, send score to leaderboard
+    if (username && scoreResult.totalScore) {
+      try {
+        const leaderboardResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/leaderboard`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: username,
+            score: scoreResult.totalScore
+          })
+        });
+
+        if (!leaderboardResponse.ok) {
+          console.error('Failed to add score to leaderboard:', await leaderboardResponse.text());
+        } else {
+          console.log('Score successfully added to leaderboard');
+        }
+      } catch (leaderboardError) {
+        console.error('Error adding to leaderboard:', leaderboardError);
+        // Don't fail the main request if leaderboard fails
+      }
+    }
+
     console.log('Question-Answer scoring completed successfully');
     return NextResponse.json({ 
       success: true, 
       question,
       answer: answer.substring(0, 200) + (answer.length > 200 ? '...' : ''),
       questionId,
+      username,
+      leaderboardSubmitted: !!username,
       ...scoreResult,
       timestamp: new Date().toISOString()
     });
