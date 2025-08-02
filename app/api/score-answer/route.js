@@ -183,6 +183,8 @@ export async function POST(request) {
       expectedPoints || []
     );
 
+    console.log('Scoring result:', scoreResult);
+
     // If username is provided, send score to leaderboard
     if (username && scoreResult.totalScore) {
       try {

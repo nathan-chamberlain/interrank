@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useSupabase } from '@/lib/SupabaseProvider';
 
@@ -34,6 +34,7 @@ const Score = () => {
   const [isScoring, setIsScoring] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { session } = useSupabase();
+  const hasCalculated = useRef(false);
 
   // Get username from session
   const username = session?.user?.user_metadata?.full_name || 
@@ -47,7 +48,8 @@ const Score = () => {
     const questionIdParam = searchParams.get('questionId');
     const categoryParam = searchParams.get('category');
     
-    if (transcriptParam && questionParam) {
+    if (transcriptParam && questionParam && !hasCalculated.current) {
+      hasCalculated.current = true;
       const decodedTranscript = decodeURIComponent(transcriptParam);
       const decodedQuestion = decodeURIComponent(questionParam);
       
@@ -57,7 +59,7 @@ const Score = () => {
       setCategory(categoryParam || '');
       
       calculateScore(decodedQuestion, decodedTranscript, questionIdParam);
-    } else {
+    } else if (!transcriptParam || !questionParam) {
       setError('Missing transcript or question data');
     }
   }, [searchParams]);
