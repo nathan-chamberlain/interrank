@@ -1,6 +1,8 @@
 'use client';
 
 import { useSupabase } from "@/lib/SupabaseProvider"
+import Link from "next/link";
+import { CgProfile } from "react-icons/cg";
 
 const Profile = () => {
   const { session, supabase } = useSupabase();
@@ -34,9 +36,34 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 px-4">
-      <div className="bg-gray-800 rounded-2xl shadow-xl p-8 flex flex-col items-center w-full max-w-md">
-        <img
+    <div className="min-h-screen bg-gray-900">
+      {/* Navigation Header */}
+      <header className="w-full flex items-center justify-between py-4 px-8 bg-gray-800">
+        <div className="flex items-center">
+          <Link href="/">
+            <img
+              src="/logo.png"
+              alt="INTERRANK Logo"
+              className="h-16 w-auto cursor-pointer"
+              style={{ minWidth: '64px' }}
+            />
+          </Link>
+        </div>
+        <nav className="flex items-center gap-6">
+          <div className="flex items-center gap-8">
+            <Link href="/train" className="text-gray-200 font-semibold px-2 py-1 hover:text-white hover:underline transition-colors">Train</Link>
+            <Link href="/leaderboard" className="text-gray-200 font-semibold px-2 py-1 hover:text-white hover:underline transition-colors">Stats/Leaderboard</Link>
+          </div>
+          <Link href="/profile">
+            <button className="bg-green-700 hover:bg-green-600 p-2 rounded-full flex items-center justify-center ml-8">
+              <CgProfile className="h-8 w-8 text-white" />
+            </button>
+          </Link>
+        </nav>
+      </header>
+      <div className="flex-1 flex items-center justify-center py-8">
+        <div className="bg-gray-800 rounded-2xl shadow-xl p-8 flex flex-col items-center w-full max-w-md">
+          <img
           src={avatarUrl}
           alt="Profile Avatar"
           className="w-28 h-28 rounded-full border-4 border-green-400 shadow-lg mb-4"
@@ -65,6 +92,7 @@ const Profile = () => {
           Sign Out
         </button>
       </div>
+    </div>
     </div>
   );
 }

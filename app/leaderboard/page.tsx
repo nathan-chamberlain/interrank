@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { CgProfile } from "react-icons/cg";
 import { useSupabase } from '@/lib/SupabaseProvider';
 import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
+import Header from '@/components/Header';
 
 // Dummy user data for illustration. Replace with real API calls as needed.
 const mockUser = {
@@ -65,29 +66,7 @@ const Leaderboard = () => {
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Navigation Header */}
-      <header className="w-full flex items-center justify-between py-4 px-8 bg-gray-800">
-        <div className="flex items-center">
-          <Link href="/">
-            <img
-              src="/logo.png"
-              alt="INTERRANK Logo"
-              className="h-16 w-auto cursor-pointer"
-              style={{ minWidth: '64px' }}
-            />
-          </Link>
-        </div>
-        <nav className="flex items-center gap-6">
-          <div className="flex items-center gap-8">
-            <Link href="/train" className="text-gray-200 font-semibold px-2 py-1 hover:text-white hover:underline transition-colors">Train</Link>
-            <Link href="/leaderboard" className="text-gray-200 font-semibold px-2 py-1 hover:text-white hover:underline transition-colors">Leaderboard</Link>
-          </div>
-          <Link href="/profile">
-            <button className="bg-green-700 hover:bg-green-600 p-2 rounded-full flex items-center justify-center ml-8">
-              <CgProfile className="h-8 w-8 text-white" />
-            </button>
-          </Link>
-        </nav>
-      </header>
+      <Header />
 
       <main className="max-w-7xl mx-auto mt-10 flex gap-8 px-4">
         {/* Left side: User Stats */}
