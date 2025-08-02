@@ -50,7 +50,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
 
   if (!session) {
     return (
-      <div className=" flex items-center justify-center bg-gray-900">
+      <div className=" flex items-center justify-center bg-gray-900 min-h-screen">
         <Auth
           supabaseClient={supabase}
           appearance={{
