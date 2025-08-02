@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from "next/link";
 
 const Train = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -266,102 +267,112 @@ const Train = () => {
   // Show loading state while fetching question
   if (isLoadingQuestion) {
     return (
-      <div className="bg-black  flex flex-col items-center justify-center p-4">
+      <div className="bg-black min-h-screen flex flex-col items-center justify-center p-4">
         <p className="text-white">Loading question...</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-900 flex flex-col items-center justify-center p-4">
-      {/* Question Display */}
-      <div className="text-center mb-6 max-w-4xl">
-        <h2 className="text-xl text-white mb-2">Question:</h2>
-        <p className="text-lg text-blue-300 font-medium mb-1">{question}</p>
+    <div className="bg-black min-h-screen flex flex-col p-4">
+      
+      {/* Question Display - Centered */}
+      <div className="text-center mb-6 mt-8"> {/* Added mt-8 for top margin */}
+        <h2 className="text-2xl text-white mb-3">Question:</h2>
+        <p className="text-2xl text-blue-300 font-medium mb-2">{question}</p>
         {questionCategory && (
           <p className="text-sm text-gray-400">Category: {questionCategory}</p>
         )}
       </div>
-      
-      {isLoading && (
-        <p className="text-white">Loading camera...</p>
-      )}
-      
-      {error && (
-        <p className="text-red-500 text-center max-w-md">{error}</p>
-      )}
-      
-      {!error && (
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          className="rounded-lg border-2 border-white mb-6"
-          style={{ maxWidth: '100%', height: 'auto' }}
-        />
-      )}
 
-      {/* Speech Recognition Controls */}
-      <div className="flex flex-col items-center space-y-4 w-full max-w-4xl">
-        <div className="flex space-x-4">
-          <button
-            onClick={toggleRecording}
-            className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
-              isRecording 
-                ? 'bg-red-600 hover:bg-red-700 text-white' 
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
-            }`}
-            disabled={!!speechError}
-          >
-            {isRecording ? '⏹️ Stop Recording' : '🎤 Start Recording (60s)'}
-          </button>
+      {/* Main Content - Split Layout */}
+      <div className="flex flex-col md:flex-row gap-1 px-8 justify-center"> {/* Changed gap-2 to gap-1 */}
+        {/* Left Side - Video */}
+        <div className=""> {/* Changed from 0.7 to 0.65 */}
+          {isLoading && (
+            <p className="text-white">Loading camera...</p>
+          )}
+          
+          {error && (
+            <p className="text-red-500 text-center max-w-md">{error}</p>
+          )}
+          
+          {!error && (
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              className="rounded-lg border-2 border-white w-full"
+              style={{ 
+                maxHeight: '50vh',  
+                maxWidth: '640px',  // Increased from 480px to 640px
+                margin: '0 auto'   
+              }}
+            />
+          )}
+
+          {/* Recording Controls under video */}
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={toggleRecording}
+              className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
+                isRecording 
+                  ? 'bg-red-600 hover:bg-red-700 text-white' 
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
+              disabled={!!speechError}
+            >
+              {isRecording ? '⏹️ Stop Recording' : '🎤 Start Recording (60s)'}
+            </button>
+          </div>
         </div>
 
-        {isRecording && (
-          <div className="flex flex-col items-center space-y-2">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-white text-sm">Recording...</span>
+        {/* Right Side - Transcript and Controls */}
+        <div className="px-8 min-w-[300px] max-w-[50%] flex flex-col"> {/* Added max-w-[50%] */}
+          {isRecording && (
+            <div className="mb-4 flex flex-col items-center space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                <span className="text-white text-sm">Recording...</span>
+              </div>
+              <div className="text-white text-lg font-mono">
+                {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+              </div>
+              <div className="w-full bg-gray-700 rounded-full h-2">
+                <div 
+                  className="bg-red-500 h-2 rounded-full transition-all duration-1000"
+                  style={{ width: `${((60 - timeRemaining) / 60) * 100}%` }}
+                ></div>
+              </div>
             </div>
-            <div className="text-white text-lg font-mono">
-              {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
-            </div>
-            <div className="w-64 bg-gray-700 rounded-full h-2">
-              <div 
-                className="bg-red-500 h-2 rounded-full transition-all duration-1000"
-                style={{ width: `${((60 - timeRemaining) / 60) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-        )}
+          )}
 
-        {/* Transcript Display */}
-        {transcript && isRecording && (
-          <div className="w-full max-w-2xl">
+          {/* Transcript Display */}
+          <div className="flex-grow">
             <h3 className="text-white text-lg font-semibold mb-2">Transcript:</h3>
-            <div className="bg-gray-800 p-4 rounded-lg text-white text-sm max-h-40 overflow-y-auto">
+            <div className="bg-gray-800 p-4 rounded-lg text-white text-sm h-[calc(60vh-100px)] overflow-y-auto">
               {finalTranscript && <span className="text-green-300">{finalTranscript}</span>}
               {interimTranscript && <span className="text-gray-400 italic">{interimTranscript}</span>}
             </div>
           </div>
-        )}
 
-        {/* Analysis Controls */}
-        {finalTranscript && !isRecording && (
-          <div className="w-full max-w-2xl space-y-4">
-            <button
-              onClick={navigateToScore}
-              className="w-full px-6 py-3 rounded-lg font-semibold transition-colors bg-green-600 hover:bg-green-700 text-white"
-            >
-              📊 View Score & Analysis
-            </button>
-          </div>
-        )}
+          {/* Analysis Button */}
+          {finalTranscript && !isRecording && (
+            <div className="mt-4">
+              <button
+                onClick={navigateToScore}
+                className="w-full px-6 py-3 rounded-lg font-semibold transition-colors bg-green-600 hover:bg-green-700 text-white"
+              >
+                📊 View Score & Analysis
+              </button>
+            </div>
+          )}
 
-        {speechError && (
-          <p className="text-red-500 text-center max-w-md">{speechError}</p>
-        )}
+          {speechError && (
+            <p className="text-red-500 text-center mt-4">{speechError}</p>
+          )}
+        </div>
       </div>
     </div>
   );
