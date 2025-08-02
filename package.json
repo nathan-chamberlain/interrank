@@ -9,11 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@supabase/supabase-js": "^2.53.0",
-=======
+    "@auth0/nextjs-auth0": "^4.9.0",
     "@google/generative-ai": "^0.24.1",
->>>>>>> c2807f384512717606bd505a9eca1ebbde5e6823
+    "@supabase/supabase-js": "^2.53.0",
     "next": "15.4.5",
     "react": "19.1.0",
     "react-dom": "19.1.0"

@@ -80,6 +80,7 @@ const Login = () => {
           </a>
         </div>
       </div>
+      <a href="/auth/login">Login</a>
     </div>
   );
 }
