@@ -279,17 +279,19 @@ const Score = () => {
         {scoreData && (
           <div className="flex space-x-4 justify-center">
             <button
-              onClick={() => router.push('/train')}
-              className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
-            >
-              📚 New Question
-            </button>
-            <button
               onClick={() => router.push('/leaderboard')}
               className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
             >
               📊 Leaderboard
             </button>
+            
+            <button
+              onClick={() => router.push('/train')}
+              className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+            >
+              📚 New Question
+            </button>
+            
           </div>
         )}
       </div>
