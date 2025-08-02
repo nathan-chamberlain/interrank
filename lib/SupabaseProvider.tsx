@@ -50,10 +50,29 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
 
   if (!session) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Auth 
-          supabaseClient={supabase} 
-          appearance={{ theme: ThemeSupa }}
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <Auth
+          supabaseClient={supabase}
+          appearance={{
+            theme: ThemeSupa,
+            variables: {
+              default: {
+                colors: {
+                  brand: '#22d3ee',
+                  brandAccent: '#0ea5e9',
+                  inputBackground: '#1e293b',
+                  inputBorder: '#334155',
+                  inputText: '#f1f5f9',
+                  anchorTextColor: '#38bdf8',
+                  messageText: '#f1f5f9',
+                  defaultButtonBackground: '#334155',
+                  defaultButtonText: '#f1f5f9',
+                  dividerBackground: '#334155',
+                },
+              },
+            },
+          }}
+          theme="dark"
           providers={['google', 'github']}
         />
       </div>
