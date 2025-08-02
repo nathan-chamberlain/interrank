@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function InterviewListings() {
   return (
-    <div className="w-full min-h-screen flex flex-co" style={{ backgroundColor: "#181A1B" }}>
+    <div className="w-full flex flex-col bg-gray-900">
       <main className="max-w-4xl mx-auto mt-12">
         {/* Combined Sections */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

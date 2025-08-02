@@ -1,10 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { CgProfile } from "react-icons/cg";
 import { useSupabase } from '@/lib/SupabaseProvider';
 import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
-import Header from '@/components/Header';
 
 // Dummy user data for illustration. Replace with real API calls as needed.
 const mockUser = {
@@ -64,10 +61,7 @@ const Leaderboard = () => {
   }, [username]);
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      {/* Navigation Header */}
-      <Header />
-
+    <div className="bg-gray-900">
       <main className="max-w-7xl mx-auto mt-10 flex gap-8 px-4">
         {/* Left side: User Stats */}
         <section className="w-1/3 bg-gray-800 rounded-lg p-6 h-fit">
