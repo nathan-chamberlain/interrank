@@ -32,16 +32,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // Insert new entry into leaderboard table
+    // Insert new entry into leaderboard table (or update if username exists)
     const { data, error } = await supabase
       .from('leaderboard')
-      .insert([
+      .upsert([
         {
           username,
           score,
           created_at: new Date().toISOString()
         }
-      ])
+      ], {
+        onConflict: 'username'
+      })
       .select();
 
     if (error) {
