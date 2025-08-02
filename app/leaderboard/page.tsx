@@ -18,9 +18,9 @@ const Leaderboard = () => {
 
   // Get username from session
   const username = session?.user?.user_metadata?.full_name ||
-                   session?.user?.user_metadata?.name ||
-                   session?.user?.email?.split('@')[0] ||
-                   'Unknown User';
+    session?.user?.user_metadata?.name ||
+    session?.user?.email?.split('@')[0] ||
+    'Unknown User';
 
   // State for leaderboard data
   const [data, setData] = useState<any[]>([]);
@@ -32,13 +32,13 @@ const Leaderboard = () => {
     const fetchLeaderboard = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/leaderboard`, {
+        const response = await fetch("/api/leaderboard", {
           cache: 'no-store'
         });
         const leaderboardData = response.ok ? await response.json() : [];
         setData(leaderboardData);
 
-        const usernameResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/leaderboard?username=${encodeURIComponent(username)}`, {
+        const usernameResponse = await fetch(`/api/leaderboard?username=${encodeURIComponent(username)}`, {
           cache: 'no-store'
         });
         const userLeaderboardData = usernameResponse.ok ? await usernameResponse.json() : null;
@@ -100,8 +100,8 @@ const Leaderboard = () => {
                   >
                     <div>
                       {interview.created_at && <h4 className="text-white font-medium">{interview.created_at
-                            ? new Date(String(interview.created_at)).toLocaleString()
-                            : ""}</h4>}
+                        ? new Date(String(interview.created_at)).toLocaleString()
+                        : ""}</h4>}
                     </div>
                     <div className="bg-green-900 px-3 py-1 rounded-full">
                       <span className="text-green-400 font-semibold">+{interview.score}</span>
