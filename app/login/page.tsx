@@ -1,11 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { useAccount } from '@/lib/AccountProvider';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAccount();
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,8 +20,16 @@ const Login = () => {
     try {
       // Example: await signIn(email, password);
       console.log('Login attempt:', { email, password });
+      const success = await login(email, 'dummy-jwt-token'); // Replace with actual JWT token from your auth service
+
+      if (success) {
+        router.push('/'); // Redirect to home or dashboard after successful login
+      } else {
+        setError('Invalid credentials. Please try again.');
+      }
     } catch (error) {
       console.error('Login failed:', error);
+      setError('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -66,6 +79,8 @@ const Login = () => {
             {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+
+        {error && <div className="mt-4 text-red-500 text-sm">{error}</div>}
 
         <div className="mt-6 text-center">
           <a href="#" className="text-sm text-blue-400 hover:text-blue-300">
