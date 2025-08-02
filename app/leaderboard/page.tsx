@@ -47,7 +47,35 @@ export default async function Leaderboard() {
         </nav>
       </header>
 
-      <main className="max-w-5xl mx-auto mt-10 flex gap-8 px-4">
+      <main className="max-w-7xl mx-auto mt-10 flex gap-8 px-4">
+        {/* Left side: User Stats */}
+        <section className="w-1/3 bg-gray-800 rounded-lg p-6 h-fit">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-green-400 mb-2">Total Score</h2>
+            <div className="text-4xl font-bold text-white">{mockUser.totalPoints}</div>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold text-green-400 mb-4">Recent Practice</h3>
+            <div className="space-y-4">
+              {mockUser.recent.map((interview) => (
+                <div 
+                  key={interview.id} 
+                  className="bg-gray-700 rounded-lg p-4 flex justify-between items-center"
+                >
+                  <div>
+                    <h4 className="text-white font-medium">{interview.title}</h4>
+                    <p className="text-gray-400 text-sm">{interview.date}</p>
+                  </div>
+                  <div className="bg-green-900 px-3 py-1 rounded-full">
+                    <span className="text-green-400 font-semibold">+{interview.points}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Right side: Leaderboard */}
         <section className="flex-1">
           <h1 className="text-3xl font-bold mb-6 text-green-400">Leaderboard</h1>
