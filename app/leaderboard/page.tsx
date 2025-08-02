@@ -1,20 +1,12 @@
-import { createClient } from '@supabase/supabase-js';
-
-// It's best to store these in environment variables for security!
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
 export default async function Leaderboard() {
-  // Fetch username, score, and timestamp from leaderboard table
-  const { data, error } = await supabase
-    .from('leaderboard')
-    .select('*')
-    .order('score', { ascending: false });
-
-  if (error) {
-    return <div className="text-red-500">Error: {error.message}</div>;
-  }
+  // Fetch leaderboard data from API
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/leaderboard`, {
+    cache: 'no-store' // Ensures fresh data on each request
+  });
+  
+  const data = response.ok ? await response.json() : [];
 
   return (
     <main className="max-w-xl mx-auto mt-10">
@@ -29,8 +21,8 @@ export default async function Leaderboard() {
           </tr>
         </thead>
         <tbody>
-          {data?.map((entry, idx) => (
-            <tr key={entry.username}>
+          {data?.map((entry: { username: boolean | Key | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; score: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; created_at: string | number | Date; }, idx: number) => (
+            <tr key={typeof entry.username === 'string' || typeof entry.username === 'number' ? entry.username : `row-${idx}`}>
               <td className="py-2 px-4 border-b">{idx + 1}</td>
               <td className="py-2 px-4 border-b">{entry.username}</td>
               <td className="py-2 px-4 border-b">{entry.score}</td>
