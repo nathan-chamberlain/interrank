@@ -25,17 +25,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
         <SupabaseProvider>
-          <div className="min-h-screen bg-gray-900 text-white">
+          <div className="h-screen w-full flex flex-col bg-gray-900 text-white">
             <Header />
-            {children}
+            <main className="flex-1 h-full w-full">
+              {children}
+            </main>
           </div>
-          
-          
         </SupabaseProvider>
       </body>
     </html>
