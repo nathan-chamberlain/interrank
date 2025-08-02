@@ -44,9 +44,8 @@ export default function Home() {
           <p className="mb-6 text-center" style={{ color: '#B0B3B8' }}>
             Practice your skills and improve your ranking by training with real interview questions.
           </p>
-          <Link href="/train">
-            
-            <button className="bg-[#2D6F40] hover:bg-[#245732] text-white px-6 py-2 rounded font-semibold cursor-pointer">
+          <Link href="/train/interview-listings">
+            <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold cursor-pointer">
               Start Training
             </button>
           </Link>
