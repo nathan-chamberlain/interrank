@@ -1,4 +1,5 @@
 import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+import Link from 'next/link';
 
 // Dummy user data for illustration. Replace with real API calls as needed.
 const mockUser = {
@@ -20,56 +21,83 @@ export default async function Leaderboard() {
   // TODO: Replace mockUser with real user data fetching logic
 
   return (
-    <main className="max-w-5xl mx-auto mt-10 flex gap-8">
-      {/* Right side: Leaderboard */}
-      <section className="flex-1">
-        <h1 className="text-3xl font-bold mb-6 text-green-900">Leaderboard</h1>
-        <div className="overflow-x-auto rounded shadow bg-white">
-          <table className="min-w-full text-left">
-            <thead className="bg-green-700 text-white">
-              <tr>
-                <th className="py-3 px-4 rounded-tl">Rank</th>
-                <th className="py-3 px-4">Username</th>
-                <th className="py-3 px-4">Score</th>
-                <th className="py-3 px-4 rounded-tr">Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.length === 0 && (
+    <div className="min-h-screen bg-gray-900">
+      {/* Navigation Header */}
+      <header className="w-full flex items-center justify-between py-4 px-8 bg-gray-800">
+        <div className="flex items-center">
+          <Link href="/">
+            <img
+              src="/logo.png"
+              alt="INTERRANK Logo"
+              className="h-16 w-auto cursor-pointer"
+              style={{ minWidth: '64px' }}
+            />
+          </Link>
+        </div>
+        <nav className="flex items-center gap-6">
+          <div className="flex items-center gap-8">
+            <Link href="/train" className="text-gray-200 font-semibold px-2 py-1 hover:text-white hover:underline transition-colors">Train</Link>
+            <Link href="/leaderboard" className="text-gray-200 font-semibold px-2 py-1 hover:text-white hover:underline transition-colors">Leaderboard</Link>
+          </div>
+          <Link href="/profile">
+            <button className="bg-green-700 hover:bg-green-600 p-2 rounded-full flex items-center justify-center ml-8">
+              <img src="/profile-icon.png" alt="Profile" className="h-8 w-8" />
+            </button>
+          </Link>
+        </nav>
+      </header>
+
+      <main className="max-w-5xl mx-auto mt-10 flex gap-8 px-4">
+        {/* Right side: Leaderboard */}
+        <section className="flex-1">
+          <h1 className="text-3xl font-bold mb-6 text-green-400">Leaderboard</h1>
+          <div className="overflow-x-auto rounded shadow bg-gray-800">
+            <table className="min-w-full text-left">
+              <thead className="bg-green-900 text-gray-100">
                 <tr>
-                  <td colSpan={4} className="py-6 px-4 text-center text-gray-500">
-                    No leaderboard data available.
-                  </td>
+                  <th className="py-3 px-4 rounded-tl">Rank</th>
+                  <th className="py-3 px-4">Username</th>
+                  <th className="py-3 px-4">Score</th>
+                  <th className="py-3 px-4 rounded-tr">Time</th>
                 </tr>
-              )}
-              {data?.map(
-                (
-                  entry: {
-                    username: string;
-                    score: number;
-                    created_at: string | number | Date;
-                  },
-                  idx: number
-                ) => (
-                  <tr
-                    key={entry.username || `row-${idx}`}
-                    className={"text-black" + (idx % 2 === 0 ? " bg-green-50" : " bg-white")}
-                  >
-                    <td className="py-2 px-4 font-semibold">{idx + 1}</td>
-                    <td className="py-2 px-4">{entry.username}</td>
-                    <td className="py-2 px-4">{entry.score}</td>
-                    <td className="py-2 px-4">
-                      {entry.created_at
-                        ? new Date(entry.created_at).toLocaleString()
-                        : ""}
+              </thead>
+              <tbody>
+                {data?.length === 0 && (
+                  <tr>
+                    <td colSpan={4} className="py-6 px-4 text-center text-gray-400">
+                      No leaderboard data available.
                     </td>
                   </tr>
-                )
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </main>
+                )}
+                {data?.map(
+                  (
+                    entry: {
+                      username: string;
+                      score: number;
+                      created_at: string | number | Date;
+                    },
+                    idx: number
+                  ) => (
+                    <tr
+                      key={entry.username || `row-${idx}`}
+                      className={"text-gray-200" + (idx % 2 === 0 ? " bg-gray-700" : " bg-gray-800")}
+                    >
+                      <td className="py-2 px-4 font-semibold">{idx + 1}</td>
+                      <td className="py-2 px-4">{entry.username}</td>
+                      <td className="py-2 px-4">{entry.score}</td>
+                      <td className="py-2 px-4">
+                        {entry.created_at
+                          ? new Date(entry.created_at).toLocaleString()
+                          : ""}
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
