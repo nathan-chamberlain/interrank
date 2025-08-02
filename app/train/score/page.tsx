@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useSupabase } from '@/lib/SupabaseProvider';
 
 // Update interface to match the score-answer API response
 interface ScoreData {
@@ -32,7 +33,13 @@ const Score = () => {
   const [scoreData, setScoreData] = useState<ScoreData | null>(null);
   const [isScoring, setIsScoring] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const username = 'Guest'; // Replace with actual username from AccountProvider or context
+  const { session } = useSupabase();
+
+  // Get username from session
+  const username = session?.user?.user_metadata?.full_name || 
+                   session?.user?.user_metadata?.name || 
+                   session?.user?.email?.split('@')[0] || 
+                   'Unknown User';
 
   useEffect(() => {
     const transcriptParam = searchParams.get('transcript');
