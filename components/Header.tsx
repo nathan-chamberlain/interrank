@@ -22,6 +22,7 @@ const Header = () => {
                     <Link href="/" className="text-gray-200 font-semibold px-2 py-1 hover:text-white hover:underline transition-colors">Home</Link>
                     <Link href="/train/interview-listings" className="text-gray-200 font-semibold px-2 py-1 hover:text-white hover:underline transition-colors">Train</Link>
                     <Link href="/leaderboard" className="text-gray-200 font-semibold px-2 py-1 hover:text-white hover:underline transition-colors">Stats/Leaderboard</Link>
+                    <Link href="/about" className="text-gray-200 font-semibold px-2 py-1 hover:text-white hover:underline transition-colors">About Us</Link>
                 </div>
                 <Link href="/profile">
                     <button className="bg-green-700 hover:bg-green-600 p-2 rounded-full flex items-center justify-center ml-8">
