@@ -10,6 +10,16 @@ export default function Home() {
             Go to Train Page
           </Link>
         </div>
+        <div>
+          <Link href="/transcript" className="text-green-500 hover:underline">
+            Process Transcripts with AI
+          </Link>
+        </div>
+        <div>
+          <Link href="/practice" className="text-purple-500 hover:underline">
+            Interview Practice (Q&A Scoring)
+          </Link>
+        </div>
       </div>
     </div>
   );
