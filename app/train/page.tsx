@@ -266,16 +266,14 @@ const Train = () => {
   // Show loading state while fetching question
   if (isLoadingQuestion) {
     return (
-      <div className="bg-black min-h-screen flex flex-col items-center justify-center p-4">
+      <div className="bg-black  flex flex-col items-center justify-center p-4">
         <p className="text-white">Loading question...</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-black min-h-screen flex flex-col items-center justify-center p-4">
-      <h1 className="text-3xl font-bold text-white mb-8">Train Page</h1>
-      
+    <div className="bg-gray-900 flex flex-col items-center justify-center p-4">
       {/* Question Display */}
       <div className="text-center mb-6 max-w-4xl">
         <h2 className="text-xl text-white mb-2">Question:</h2>

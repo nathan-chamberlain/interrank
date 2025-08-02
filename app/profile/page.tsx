@@ -34,9 +34,11 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 px-4">
-      <div className="bg-gray-800 rounded-2xl shadow-xl p-8 flex flex-col items-center w-full max-w-md">
-        <img
+    <div className="bg-gray-900">
+      {/* Profile Section */}
+      <div className="flex-1 flex items-center justify-center py-8">
+        <div className="bg-gray-800 rounded-2xl shadow-xl p-8 flex flex-col items-center w-full max-w-md">
+          <img
           src={avatarUrl}
           alt="Profile Avatar"
           className="w-28 h-28 rounded-full border-4 border-green-400 shadow-lg mb-4"
@@ -65,6 +67,7 @@ const Profile = () => {
           Sign Out
         </button>
       </div>
+    </div>
     </div>
   );
 }

@@ -103,20 +103,8 @@ const Score = () => {
   };
 
   return (
-    <div className="bg-black min-h-screen p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-white">Interview Answer Analysis</h1>
-          <button
-            onClick={goBack}
-            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors cursor-pointer"
-          >
-            ← Back to Training
-          </button>
-        </div>
-
-        {/* Processing State */}
+    <div className="bg-gray-900 min-h-screen">
+      <div className="max-w-4xl mx-auto p-4">
         {isScoring && (
           <div className="flex flex-col items-center justify-center py-12">
             <div className="flex items-center space-x-2 mb-4">
@@ -291,12 +279,6 @@ const Score = () => {
         {scoreData && (
           <div className="flex space-x-4 justify-center">
             <button
-              onClick={goBack}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
-            >
-              🎤 Try Again
-            </button>
-            <button
               onClick={() => router.push('/train')}
               className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
             >
@@ -307,6 +289,12 @@ const Score = () => {
               className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
             >
               🏠 Home
+            </button>
+            <button
+              onClick={() => router.push('/leaderboard')}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+            >
+              📊 Leaderboard
             </button>
           </div>
         )}
