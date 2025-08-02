@@ -12,13 +12,43 @@ const Train = () => {
   const [finalTranscript, setFinalTranscript] = useState('');
   const [interimTranscript, setInterimTranscript] = useState('');
   const [speechError, setSpeechError] = useState<string | null>(null);
-  // Add new states for API processing
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<string | null>(null);
-  // Add states for timer
   const [timeRemaining, setTimeRemaining] = useState(60);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [question, setQuestion] = useState<string | null>(null);
+  const [questionId, setQuestionId] = useState<number | null>(null);
+  const [questionCategory, setQuestionCategory] = useState<string | null>(null);
+  const [isLoadingQuestion, setIsLoadingQuestion] = useState(true);
+
+  // Fetch a random question from the API
+  useEffect(() => {
+    const fetchQuestion = async () => {
+      try {
+        const response = await fetch('/api/questions?random=true&count=1');
+        const data = await response.json();
+        
+        if (data.success && data.questions.length > 0) {
+          const selectedQuestion = data.questions[0];
+          setQuestion(selectedQuestion.question);
+          setQuestionId(selectedQuestion.id);
+          setQuestionCategory(selectedQuestion.category);
+        } else {
+          setQuestion("What are your biggest strengths?"); // fallback
+          setQuestionId(5); // fallback ID
+          setQuestionCategory("Self-Assessment");
+        }
+      } catch (error) {
+        console.error('Failed to fetch question:', error);
+        setQuestion("What are your biggest strengths?"); // fallback
+        setQuestionId(5); // fallback ID
+        setQuestionCategory("Self-Assessment");
+      } finally {
+        setIsLoadingQuestion(false);
+      }
+    };
+
+    fetchQuestion();
+  }, []);
 
   useEffect(() => {
     // Initialize Speech Recognition
@@ -186,7 +216,6 @@ const Train = () => {
       setSpeechError(null);
       setFinalTranscript('');
       setInterimTranscript('');
-      setAnalysisResult(null); // Clear previous results
       setTimeRemaining(60); // Reset timer to 60 seconds
       
       recognitionRef.current.start();
@@ -213,24 +242,48 @@ const Train = () => {
     }
   };
 
-  // Replace the processTranscript function with navigateToScore
+  // Navigate to score page with transcript and question data
   const navigateToScore = () => {
     if (!finalTranscript.trim()) {
       setSpeechError('No transcript to analyze');
       return;
     }
 
-    // Navigate to score page with transcript as query parameter
-    const encodedTranscript = encodeURIComponent(finalTranscript);
-    router.push(`/train/score?transcript=${encodedTranscript}`);
+    // Create URL with all necessary parameters
+    const params = new URLSearchParams({
+      transcript: finalTranscript,
+      question: question || '',
+      questionId: questionId?.toString() || '',
+      category: questionCategory || ''
+    });
+
+    router.push(`/train/score?${params.toString()}`);
   };
 
   // Update the transcript display
   const transcript = finalTranscript + interimTranscript;
 
+  // Show loading state while fetching question
+  if (isLoadingQuestion) {
+    return (
+      <div className="bg-black min-h-screen flex flex-col items-center justify-center p-4">
+        <p className="text-white">Loading question...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-black min-h-screen flex flex-col items-center justify-center p-4">
       <h1 className="text-3xl font-bold text-white mb-8">Train Page</h1>
+      
+      {/* Question Display */}
+      <div className="text-center mb-6 max-w-4xl">
+        <h2 className="text-xl text-white mb-2">Question:</h2>
+        <p className="text-lg text-blue-300 font-medium mb-1">{question}</p>
+        {questionCategory && (
+          <p className="text-sm text-gray-400">Category: {questionCategory}</p>
+        )}
+      </div>
       
       {isLoading && (
         <p className="text-white">Loading camera...</p>

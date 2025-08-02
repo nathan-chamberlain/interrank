@@ -26,23 +26,6 @@ export default function Home() {
             </button>
           </Link>
         </section>
-        {/* Stats & Leaderboard Section */}
-        <section className="bg-gray-900 rounded-xl flex flex-col items-center p-8 w-full max-w-md shadow-lg">
-          <img
-            src="/leaderboard-image.png"
-            alt="Stats & Leaderboard"
-            className="w-32 h-32 object-contain mb-6"
-          />
-          <h2 className="text-white text-2xl font-semibold mb-2">Stats & Leaderboard</h2>
-          <p className="text-gray-300 mb-6 text-center">
-            View your progress, analyze your stats, and see how you rank against others.
-          </p>
-          <Link href="/leaderboard">
-            <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded font-semibold">
-              View Leaderboard
-            </button>
-          </Link>
-        </section>
       </main>
     </div>
   );
